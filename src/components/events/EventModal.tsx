@@ -3,7 +3,7 @@ import { Event, CreateEventDto } from '../../types/event.types';
 import { EventForm } from './EventForm';
 import Modal from '../common/Modal';
 import { useGetCategoriesQuery } from '../../services/category.service';
-
+import { useToast } from '../../context/ToastContext';
 interface EventModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -20,7 +20,7 @@ export const EventModal: React.FC<EventModalProps> = ({
   isLoading,
 }) => {
   const { data: categories = [] } = useGetCategoriesQuery();
-
+const toast = useToast()
   const handleSubmit = async (data: CreateEventDto) => {
     try {
       await onSubmit({
@@ -28,9 +28,11 @@ export const EventModal: React.FC<EventModalProps> = ({
         timezone: 'UTC',
         is_recurring: data.recurrence_rule !== undefined,
       });
+      toast.success('Event created or Updated successfully');
       onClose();
     } catch (error) {
       console.error('Error submitting event:', error);
+      toast.error(error?.data?.detail||error?.data?.name||'Failed to create event');
     }
   };
 
