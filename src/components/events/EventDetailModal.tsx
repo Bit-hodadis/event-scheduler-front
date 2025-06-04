@@ -1,10 +1,8 @@
-"use client"
 
 import { useState } from "react"
-import { Modal } from "@/components/common/Modal"
-import { EventData } from "@/types/event"
+import Modal  from "../common/Modal"
+import { EventData } from "../../types/event"
 import { format } from "date-fns"
-import { getMonthCode } from "@/components/events/EventForm"
 
 interface Props {
   isOpen: boolean
@@ -72,7 +70,7 @@ export const EventDetailModal: React.FC<Props> = ({ isOpen, onClose, event }) =>
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Event Details">
+    <Modal isOpen={isOpen} onClose={onClose} size="60" title="Event Details">
       <div className="space-y-6 p-4">
         <div className="space-y-2">
           <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>

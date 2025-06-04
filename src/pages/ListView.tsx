@@ -3,16 +3,20 @@ import { format, parseISO } from 'date-fns';
 import { useGetEventsQuery, useCreateEventMutation, useUpdateEventMutation, useDeleteEventMutation } from '../services/event.service';
 import { EventModal } from '../components/events/EventModal';
 import type { Event, CreateEventDto } from '../types/event.types';
-
+import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { EventDetailModal } from '../components/events/EventDetailModal';
+import DeleteModal from '../components/common/DeleteModal';
+import { useToast } from '../context/ToastContext';
 export const ListView: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | undefined>();
-
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { data: events = [], isLoading } = useGetEventsQuery();
   const [createEvent] = useCreateEventMutation();
   const [updateEvent] = useUpdateEventMutation();
   const [deleteEvent] = useDeleteEventMutation();
-
+const toast = useToast()
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event);
     setIsModalOpen(true);
@@ -27,10 +31,17 @@ export const ListView: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const handleDeleteEvent = async (eventId: string): Promise<void> => {
-    if (window.confirm('Are you sure you want to delete this event?')) {
-      await deleteEvent(eventId);
-    }
+  const handleDeleteEvent = async (isDelete: boolean): Promise<void> => {
+    if (!isDelete) {
+      setIsDeleteModalOpen(false)
+      setSelectedEvent(undefined)
+      return;}
+    
+      await deleteEvent(selectedEvent?.id).unwrap();
+      setIsDeleteModalOpen(false)
+      setSelectedEvent(undefined)
+      toast.success('Event deleted successfully');
+    
   };
 
   const handleAddEvent = () => {
@@ -91,34 +102,30 @@ export const ListView: React.FC = () => {
                     <p className="mt-1 text-sm text-gray-600">{event.description}</p>
                   )}
                 </div>
-                <div className="ml-4 flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="ml-4 flex items-center space-x-2  transition-opacity">
                   <button
                     onClick={() => handleEventClick(event)}
                     className="text-gray-400 hover:text-gray-600"
                     title="Edit"
                   >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
+             <PencilIcon className="h-5 w-5" />
                   </button>
                   <button
-                    onClick={() => handleDeleteEvent(event.id)}
+                    onClick={() =>{ setSelectedEvent(event)
+                      setIsDeleteModalOpen(true)}}
                     className="text-gray-400 hover:text-red-600"
                     title="Delete"
                   >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
+<TrashIcon className="h-5 w-5 text-red-600" />
+                  </button>
+                  <button
+                    onClick={() =>{ setSelectedEvent(event);
+                      setIsDetailModalOpen(true);
+                    }}
+                    className="text-gray-400 hover:text-red-600"
+                    title="View"
+                  >
+<EyeIcon className="h-5 w-5 text-primary-600" />
                   </button>
                 </div>
               </div>
@@ -135,6 +142,20 @@ export const ListView: React.FC = () => {
           onSubmit={handleEventSubmit}
         />
       )}
+      {isDetailModalOpen && (
+        <EventDetailModal
+          isOpen={isDetailModalOpen}
+          onClose={() => setIsDetailModalOpen(false)}
+          event={selectedEvent}
+      
+        />
+      )}
+      {  isDeleteModalOpen &&    <DeleteModal 
+              showDeleteModal={isDeleteModalOpen}
+              onDelete={handleDeleteEvent}
+              title={selectedEvent?.title}
+              topic="event"
+              ></DeleteModal>}
     </div>
   );
 };
