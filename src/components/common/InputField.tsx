@@ -1,5 +1,5 @@
 import React, { useState, forwardRef } from 'react';
-import { useFormContext, Controller, FieldError } from 'react-hook-form';
+import { useFormContext, Controller, FieldError, UseFormRegister } from 'react-hook-form';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 interface IconComponentProps {
@@ -9,12 +9,13 @@ interface IconComponentProps {
 interface InputFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   name: string;
   label?: string;
-  type?: 'text' | 'password' | 'email' | 'number';
+  type?: 'text' | 'password' | 'email' | 'number' | 'datetime-local' | 'date';
   placeholder?: string;
   frontIcon?: React.ComponentType<IconComponentProps>;
   endIcon?: React.ComponentType<IconComponentProps>;
   error?: FieldError;
   fullWidth?: boolean;
+  register?: UseFormRegister<Record<string, unknown>>;
   className?: string;
 }
 

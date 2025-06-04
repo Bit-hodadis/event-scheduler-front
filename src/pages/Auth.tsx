@@ -7,8 +7,8 @@ export const Auth = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-md mx-auto pt-8">
-        {isLogin ? <LoginForm /> : <SignupForm />}
+      <div className=" mx-auto pt-8">
+        {isLogin ? <LoginForm /> : <SignupForm onSignup={()=>setIsLogin(true)} />}
         <div className="mt-6 text-center">
           <p className="text-sm text-black">
             {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}

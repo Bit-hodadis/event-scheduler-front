@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-const sizes = {
+type ModalSize = "sm" | "md" | "lg" | "xl" | "full" | "60" | "70" | "80" | "90";
+
+const sizes: Record<ModalSize, string> = {
   sm: "max-w-md",
   md: "max-w-xl",
   lg: "max-w-2xl",
@@ -13,7 +15,20 @@ const sizes = {
   full: "max-w-full",
 };
 
-const Modal = ({
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  description?: string;
+  children: React.ReactNode;
+  size?: ModalSize;
+  showClose?: boolean;
+  preventClose?: boolean;
+  footer?: React.ReactNode;
+  className?: string;
+}
+
+const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   title,
@@ -25,10 +40,10 @@ const Modal = ({
   footer,
   className = "",
 }) => {
-  const modalRef = useRef(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleEscape = (e) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && !preventClose) {
         onClose();
       }
@@ -47,7 +62,7 @@ const Modal = ({
 
   if (!isOpen) return null;
 
-  const handleBackdropClick = (e) => {
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget && !preventClose) {
       onClose();
     }
