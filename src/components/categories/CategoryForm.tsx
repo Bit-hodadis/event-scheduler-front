@@ -79,13 +79,13 @@ const toast = useToast()
             type="color"
             value={methods.watch('color')}
             onChange={(e) => methods.setValue('color', e.target.value.toUpperCase())}
-            className="h-10 w-20 p-1 rounded border border-gray-300"
+            className="h-10 w-full w-20 p-1 rounded border border-gray-300"
           />
           <input
             type="text"
             {...methods.register('color')}
             onChange={(e) => methods.setValue('color', e.target.value.toUpperCase())}
-            className="mt-1 block w-32 px-3 py-2 text-sm border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 rounded-md bg-gray-50"
+            className="mt-1 w-full block w-32 px-3 py-2 text-sm border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 rounded-md bg-gray-50"
             placeholder="#6366F1"
           />
         </div>

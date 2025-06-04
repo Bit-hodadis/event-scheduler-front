@@ -5,6 +5,7 @@ import { useEffect } from "react"
 import { useForm, FormProvider } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { toDatetimeLocal } from "../../utils/toDateLocalTime"
 
 // Types and interfaces
 type WeekDay = "MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU"
@@ -321,8 +322,8 @@ const transformBackendToForm = (data: EventData): any => {
     title: data.title,
     description: data.description || "",
     calendar: data.calendar,
-    start_time: data.start_time,
-    end_time: data.end_time,
+    start_time: toDatetimeLocal(data.start_time),
+    end_time: toDatetimeLocal(data.end_time),
     timezone: data.timezone,
     is_recurring: data.is_recurring,
   }
@@ -335,12 +336,12 @@ const transformBackendToForm = (data: EventData): any => {
       start_date: rule.start_date,
       end_date: rule.end_date || undefined,
       weekdays: rule.weekdays || [],
-      month_days: [],
-      relative_days: [],
-      by: undefined,
-      month: [],
-      yearly_specific_rules: [],
-      yearly_relative_rules: [],
+      month_days: rule.month_days || [],
+      relative_days: rule.relative_days || [],
+      by: rule.by || undefined,
+      month: rule.month || [],
+      yearly_specific_rules: rule.yearly_specific_rules || [],
+      yearly_relative_rules: rule.yearly_relative_rules || [],
     }
 
     // Transform weekdays
@@ -836,7 +837,7 @@ useEffect(()=>{
                   <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
                   <select
                     {...methods.register("recurrence_rule.frequency")}
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="w-full rounded-md py-3  border-primary-500 px-3 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   >
                     <option value="DAILY">Daily</option>
                     <option value="WEEKLY">Weekly</option>
@@ -850,19 +851,12 @@ useEffect(()=>{
                   <input
                     type="number"
                     {...methods.register("recurrence_rule.interval", { valueAsNumber: true })}
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="w-full rounded-md py-3 px-3 border-primary-500 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     min="1"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                  <input
-                    type="date"
-                    {...methods.register("recurrence_rule.end_date")}
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
+         
 
                 {/* Weekly Weekdays */}
                 {recurrenceRuleValues?.frequency === "WEEKLY" && (
@@ -915,7 +909,7 @@ useEffect(()=>{
                     <label className="block text-sm font-medium text-gray-700 mb-1">Monthly Recurrence Type</label>
                     <select
                       {...methods.register("recurrence_rule.by")}
-                      className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="w-full   rounded-md py-3 px-3 border-primary-500 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     >
                       <option value="">Select type...</option>
                       <option value="dayOfMonth">Specific Day of Month</option>

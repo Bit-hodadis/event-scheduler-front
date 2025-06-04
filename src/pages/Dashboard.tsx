@@ -25,14 +25,14 @@ const StatCard: React.FC<{ title: string; value: number | string; color: string 
   value, 
   color 
 }) => (
-  <div className={`p-6 rounded-xl shadow-md ${color}`}>
+  <div className={`p-6 rounded-xl border border-primary-500 ${color}`}>
     <h3 className="text-lg font-medium text-gray-700">{title}</h3>
     <p className="text-3xl font-bold mt-2">{value}</p>
   </div>
 );
 
 const CategoryCard: React.FC<{ category: string; count: number }> = ({ category, count }) => (
-  <div className="p-4 bg-white rounded-lg shadow">
+  <div className="p-4 bg-white rounded-lg border border-primary-500">
     <div className="flex items-center justify-between">
       <span className="text-sm font-medium text-gray-600">{category}</span>
       <span className="text-lg font-semibold text-gray-900">{count}</span>
@@ -48,7 +48,7 @@ export const Dashboard = () => {
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
-      <div className="bg-white p-6 rounded-xl shadow-sm">
+      <div className="bg-white p-6 rounded-xl border border-primary-500">
         <h1 className="text-2xl font-bold text-gray-900">Welcome to Your Dashboard</h1>
         <p className="text-gray-600 mt-1">
           Here&apos;s what&apos;s happening with your events as of {format(new Date(), "MMMM d, yyyy")}
@@ -56,7 +56,7 @@ export const Dashboard = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1  gap-6">
         <StatCard
           title="Total Events"
           value={total_event}

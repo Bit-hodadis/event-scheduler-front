@@ -16,6 +16,7 @@ const toast = useToast()
   const handleDeleteCategory = async (id: string) => {
     try {
       await deleteCategory(id).unwrap();
+      refetchCategory()
       toast.success('Category deleted successfully');
     } catch (error) {
       toast.error(error?.data?.detail||error?.data?.name||'Failed to delete category');
